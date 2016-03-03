@@ -1,5 +1,5 @@
 {
-  "name": "ion-autocomplete",
+  "name": "ion-autocomplete-kn",
   "version": "0.3.1",
   "description": "A configurable Ionic directive for an autocomplete dropdown",
   "keywords": [
@@ -9,8 +9,8 @@
     "ion",
     "autocomplete"
   ],
-  "homepage": "https://github.com/guylabs/ion-autocomplete",
-  "bugs": "https://github.com/guylabs/ion-autocomplete/issues",
+  "homepage": "https://github.com/olivbd/ion-autocomplete-kn",
+  "bugs": "https://github.com/olivbd/ion-autocomplete-kn/issues",
   "author": {
     "name": "Danny Povolotski",
     "email": "dannypovolotski@gmail.com",
@@ -21,11 +21,16 @@
       "name": "Guy Brand",
       "email": "admin@guylabs.org",
       "url": "http://guylabs.ch"
+    },
+    {
+      "name": "Olivier Béraud",
+      "email": "olivierberaud@free.fr",
+      "url": ""
     }
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/guylabs/ion-autocomplete.git"
+    "url": "https://github.com/olivbd/ion-autocomplete-kn.git"
   },
   "devDependencies": {
     "bower": "~1.7.7",
@@ -53,7 +58,7 @@
   "licenses": [
     {
       "type": "MIT",
-      "url": "https://github.com/guylabs/ion-autocomplete/blob/master/LICENSE"
+      "url": "https://github.com/olivbd/ion-autocomplete-kn/blob/master/LICENSE"
     }
   ],
   "scripts": {
