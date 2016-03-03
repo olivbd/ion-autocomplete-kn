@@ -1,5 +1,5 @@
 {
-  "name": "ion-autocomplete",
+  "name": "ion-autocomplete-kn",
   "version": "0.3.1",
   "description": "A configurable Ionic directive for an autocomplete dropdown",
   "main": [
@@ -29,12 +29,13 @@
   ],
   "authors": [
     "Danny Povolotski <dannypovolotski@gmail.com>",
-    "Guy Brand <admin@guylabs.org>"
+    "Guy Brand <admin@guylabs.org>",
+    "Olivier Béraud <olivierberaud@free.fr>"
   ],
-  "homepage": "https://github.com/guylabs/ion-autocomplete",
+  "homepage": "https://github.com/olivbd/ion-autocomplete-kn",
   "repository": {
     "type": "git",
-    "url": "https://github.com/guylabs/ion-autocomplete.git"
+    "url": "https://github.com/olivbd/ion-autocomplete-kn.git"
   },
   "devDependencies": {
     "ionic": "driftyco/ionic-bower#1.1.1",
