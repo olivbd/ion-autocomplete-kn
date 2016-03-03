@@ -1,11 +1,7 @@
-ion-autocomplete
-================
-[![Build Status](https://travis-ci.org/guylabs/ion-autocomplete.svg?branch=master)](https://travis-ci.org/guylabs/ion-autocomplete)
-[![Coverage Status](https://img.shields.io/coveralls/guylabs/ion-autocomplete.svg)](https://coveralls.io/r/guylabs/ion-autocomplete)
-[![Bower version](https://badge.fury.io/bo/ion-autocomplete.svg)](http://badge.fury.io/bo/ion-autocomplete)
-[![npm version](https://badge.fury.io/js/ion-autocomplete.svg)](http://badge.fury.io/js/ion-autocomplete)
+ion-autocomplete-kn
+===================
 
-> Configurable Ionic directive for an autocomplete dropdown.
+> Configurable Ionic directive for an autocomplete dropdown with specific features for an enterprise project.
 
 #Table of contents
 
@@ -540,7 +536,7 @@ directive. These options will then be added to the search input field. Be aware 
 
 # Release notes
 
-Check them here: [Release notes](https://github.com/guylabs/ion-autocomplete/blob/master/RELEASENOTES.md)
+Check them here: [Release notes](https://github.com/olivbd/ion-autocomplete-kn/blob/master/RELEASENOTES.md)
 
 # Acknowledgements
 
@@ -555,3 +551,4 @@ This Ionic autocomplete directive is available under the MIT license.
 (c) Danny Povolotski
 
 (c) Modifications by Guy Brand
+(c) Modifications by Olivier Béraud

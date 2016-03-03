@@ -1,6 +1,7 @@
 angular.module('ion-autocomplete', []).directive('ionAutocomplete', [
     '$ionicBackdrop', '$ionicScrollDelegate', '$document', '$q', '$parse', '$interpolate', '$ionicPlatform', '$compile', '$templateRequest',
     function ($ionicBackdrop, $ionicScrollDelegate, $document, $q, $parse, $interpolate, $ionicPlatform, $compile, $templateRequest) {
+        //noinspection SpellCheckingInspection
         return {
             require: ['ngModel', 'ionAutocomplete'],
             restrict: 'A',
@@ -12,8 +13,10 @@ angular.module('ion-autocomplete', []).directive('ionAutocomplete', [
                 itemsMethod: '&',
                 itemsClickedMethod: '&',
                 itemsRemovedMethod: '&',
+                itemsExtendMethod: '&',
                 modelToItemMethod: '&',
                 cancelButtonClickedMethod: '&',
+                itemsCheckMethod: '&',
                 placeholder: '@',
                 cancelLabel: '@',
                 selectItemsLabel: '@',
@@ -39,6 +42,7 @@ angular.module('ion-autocomplete', []).directive('ionAutocomplete', [
                 // set the default values of the passed in attributes
                 this.maxSelectedItems = valueOrDefault($attrs.maxSelectedItems, undefined);
                 this.templateUrl = valueOrDefault($attrs.templateUrl, undefined);
+                this.itemsMethodOrder = valueOrDefault($attrs.itemsMethodOrder, undefined);
                 this.itemsMethodValueKey = valueOrDefault($attrs.itemsMethodValueKey, undefined);
                 this.itemValueKey = valueOrDefault($attrs.itemValueKey, undefined);
                 this.itemViewValueKey = valueOrDefault($attrs.itemViewValueKey, undefined);
@@ -144,11 +148,23 @@ angular.module('ion-autocomplete', []).directive('ionAutocomplete', [
                         // clear the search query when an item is selected
                         ionAutocompleteController.searchQuery = undefined;
 
-                        // return if the max selected items is not equal to 1 and the maximum amount of selected items is reached
-                        if (ionAutocompleteController.maxSelectedItems != "1" &&
-                            angular.isArray(ionAutocompleteController.selectedItems) &&
-                            ionAutocompleteController.maxSelectedItems == ionAutocompleteController.selectedItems.length) {
-                            return;
+                        if (ionAutocompleteController.maxSelectedItems != "1") {
+                            if (angular.isDefined(attrs.itemsCheckMethod)) {
+                                if (!ionAutocompleteController.itemsCheckMethod({
+                                        callback: {
+                                            item:          item,
+                                            selectedItems: ionAutocompleteController.selectedItems,
+                                            componentId:   ionAutocompleteController.componentId
+                                        }
+                                    }))
+                                    return;
+
+                            }
+                            // return if the max selected items is not equal to 1 and the maximum amount of selected items is reached
+                            else if (angular.isArray(ionAutocompleteController.selectedItems) &&
+                                ionAutocompleteController.maxSelectedItems == ionAutocompleteController.selectedItems.length) {
+                                return;
+                            }
                         }
 
                         // store the selected items
@@ -214,7 +230,60 @@ angular.module('ion-autocomplete', []).directive('ionAutocomplete', [
                         }
                     };
 
-                    // watcher on the search field model to update the list according to the input
+                    // function which call existing callback when the item is extended.
+                    ionAutocompleteController.extendItem = function (item) {
+                        if (angular.isDefined(attrs.itemsExtendMethod)) {
+
+                            if (item.displaychild) {
+                                item.displaychild = false;
+                            }
+                            else {
+                                // show the loading icon
+                                ionAutocompleteController.showLoadingIcon = true;
+
+
+                                var promise = $q.when(ionAutocompleteController.itemsExtendMethod({
+                                    callback: {
+                                        item:        item,
+                                        componentId: ionAutocompleteController.componentId
+                                    }
+                                }));
+                                promise.then(function (promiseData) {
+
+                                    // if the promise data is not set do nothing
+                                    if (!promiseData) {
+                                        return;
+                                    }
+
+                                    // if the given promise data object has a data property use this for the further processing as the
+                                    // standard httpPromises from the $http functions store the response data in a data property
+                                    if (promiseData && promiseData.data) {
+                                        promiseData = promiseData.data;
+                                    }
+
+                                    // set the items which are returned by the items method
+                                    angular.forEach(ionAutocompleteController.searchItems, function (searchItem, k) {
+                                        if (searchItem.nodeid == promiseData.nodeid) {
+                                            ionAutocompleteController.searchItems[k].displaychild = true;
+                                            ionAutocompleteController.searchItems[k].children = ionAutocompleteController.getItemValue(promiseData,
+                                                ionAutocompleteController.itemsMethodValueKey);
+                                        }
+                                    });
+
+                                    // force the collection repeat to redraw itself as there were issues when the first items were added
+                                    $ionicScrollDelegate.resize();
+
+                                    // hide the loading icon
+                                    ionAutocompleteController.showLoadingIcon = false;
+                                }, function (error) {
+                                    // reject the error because we do not handle the error here
+                                    return $q.reject(error);
+                                });
+                            }
+                        }
+                    };
+
+                        // watcher on the search field model to update the list according to the input
                     scope.$watch('viewModel.searchQuery', function (query) {
                         ionAutocompleteController.fetchSearchQuery(query, false);
                     });
@@ -236,11 +305,7 @@ angular.module('ion-autocomplete', []).directive('ionAutocomplete', [
 
                             // if the component id is set, then add it to the query object
                             if (ionAutocompleteController.componentId) {
-                                queryObject = {
-                                    query: query,
-                                    isInitializing: isInitializing,
-                                    componentId: ionAutocompleteController.componentId
-                                }
+                                queryObject["componentId"] = ionAutocompleteController.componentId;
                             }
 
                             // convert the given function to a $q promise to support promises too
